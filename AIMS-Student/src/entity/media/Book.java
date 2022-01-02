@@ -10,7 +10,7 @@ import entity.db.AIMSDB;
 
 public class Book extends Media {
 
-    String author;
+	String author;
     String coverType;
     String publisher;
     Date publishDate;
@@ -136,11 +136,6 @@ public class Book extends Media {
 		} else {
 			throw new SQLException();
 		}
-    }
-
-    @Override
-    public List getAllMedia() {
-        return null;
     }
 
 

@@ -14,6 +14,12 @@ import java.util.logging.Logger;
  */
 public class PlaceRushOrderController {
 
+	private RushOrderInputValidator rushOrderInputValidator;
+
+    public PlaceRushOrderController(RushOrderInputValidator rushOrderInputValidator) {
+        this.rushOrderInputValidator = rushOrderInputValidator;
+    }
+    
     /**
      * Specify provinces where support rush order
      */
@@ -21,9 +27,9 @@ public class PlaceRushOrderController {
 
     /**
      * Specify list id of media that support rush order
-     * Set only media id = 200 for testing
+     * Only media id = 132 for testing
      */
-    public static List<Integer> MEDIA_IDS_SUPPORT_RUSH_ORDER = List.of(200);
+    public static List<Integer> MEDIA_IDS_SUPPORT_RUSH_ORDER = List.of(132);
 
     /**
      * Just for logging purpose
@@ -40,25 +46,19 @@ public class PlaceRushOrderController {
         if (location == null) {
             return false;
         }
-        if (PROVINCES_SUPPORT_RUSH_ODER.contains(location)) {
-            return true;
-        }
-        return false;
+        return PROVINCES_SUPPORT_RUSH_ODER.contains(location);
     }
 
     /**
-     * Method checks if user's media supports rush order or not
+     * Method checks user's media support rush order or not
      * @param mediaID Cart's media id
      */
     public boolean isItemsSupportRushOrder(int mediaID) {
-        if (MEDIA_IDS_SUPPORT_RUSH_ORDER.contains(mediaID)) {
-            return true;
-        }
-        return false;
+        return MEDIA_IDS_SUPPORT_RUSH_ORDER.contains(mediaID);
     }
 
     /**
-     * Method checks user's info support rush order or not
+     * Method checks if user's info support rush order or not
      * @param location User's province
      * @param mediaID Cart's media id
      */
@@ -71,18 +71,7 @@ public class PlaceRushOrderController {
      * @param time User's receive time
      */
     public boolean validateReceiveTime(String time) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(RECEIVE_TIME_FORMATTER);
-            LocalDateTime start = LocalDateTime.of(2000, 1, 1, 0, 0);
-            LocalDateTime end = LocalDateTime.of(2100, 1, 1,0,0);
-            LocalDateTime timeInput = LocalDateTime.parse(time, formatter);
-            if(timeInput.isAfter(start)&&timeInput.isBefore(end)) {           
-                	return true;
-            } 
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
+        return rushOrderInputValidator.isValidReceiveTime(time, RECEIVE_TIME_FORMATTER);
     }
 
     /**
@@ -90,7 +79,7 @@ public class PlaceRushOrderController {
      * @param info User's rush order info
      */
     public boolean validateRushOrderInfo(String info) {
-        return validateBasicString(info);
+        return rushOrderInputValidator.isValidRushOrderInfo(info);
     }
 
     /**
@@ -98,30 +87,6 @@ public class PlaceRushOrderController {
      * @param instruction User's rush order instruction
      */
     public boolean validateRushOrderInstruction(String instruction) {
-        return validateBasicString(instruction);
-    }
-
-    @SuppressWarnings("deprecation")
-	private boolean validateBasicString(String info) {
-        if (info == null || info.isEmpty()) {
-            return false;
-        }
-
-        boolean isValid = true;
-        for (char ch : info.toCharArray()) {
-            if ( Character.isSpace(ch) ) {
-                continue;
-            }
-            if ( Character.isDigit(ch) ) {
-            	continue;
-            }
-            if ( Character.isLetter(ch) ) {
-            	continue;
-            }
-            isValid = false;
-            break;
-        }
-
-        return isValid;
+        return rushOrderInputValidator.isValidRushOrderInstruction(instruction);
     }
 }

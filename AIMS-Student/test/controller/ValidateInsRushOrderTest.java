@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import controller.impl.RushOrderValidator;
+
 /**
  * @author Hoan - 20183539
  */
@@ -14,7 +16,7 @@ public class ValidateInsRushOrderTest {
 
     @BeforeEach
     void setUp() {
-        placeRushOrderController = new PlaceRushOrderController();
+    	placeRushOrderController = new PlaceRushOrderController(new RushOrderValidator());
     }
 
     @ParameterizedTest
